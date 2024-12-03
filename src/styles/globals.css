@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  .base-padding{
+    @apply px-4 py-2.5
+  }
+}
+
+@layer components {
+  .flex-all-center {
+    @apply flex items-center justify-center;
+  }
+  .flex-i-center {
+    @apply flex items-center;
+  }
+  .flex-j-center {
+    @apply flex justify-normal;
+  }
+}
