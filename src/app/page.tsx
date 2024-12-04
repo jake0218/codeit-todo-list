@@ -142,16 +142,19 @@ export default function Home() {
                 </p>
               </>
             ) : (
-              <ul className="w-full space-y-4">
-                {ongoingTodos.map((todo) => (
-                  <li
-                    key={todo.id}
-                    onClick={() => router.push(`/items/${todo.id}`)}
-                    className="space-x-2 flex items-center sm:w-[344px] md:w-[696px] xl:w-[588px] h-[50px] border-slate09 border-[2px] rounded-[27px] px-3 py-2 cursor-pointer"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <button
-                          onClick={() => toggleTodoStatus(todo.id, todo.isCompleted)}
+                <ul className="w-full space-y-4">
+                  {ongoingTodos.map((todo) => (
+                    <li
+                      key={todo.id}
+                      onClick={() => router.push(`/items/${todo.id}`)} // 텍스트 클릭 시 세부 페이지로 이동
+                      className="space-x-2 flex items-center sm:w-[344px] md:w-[696px] xl:w-[588px] h-[50px] border-slate09 border-[2px] rounded-[27px] px-3 py-2 cursor-pointer"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation(); // 이벤트 전파 중단
+                            toggleTodoStatus(todo.id, todo.isCompleted); // 상태 변경
+                          }}
                           className="focus:outline-none"
                         >
                           <Image
@@ -160,13 +163,13 @@ export default function Home() {
                             width={24}
                             height={24}
                           />
-                      </button>
-                    </div>
-                    <span>{todo.name}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
+                        </button>
+                      </div>
+                      <span>{todo.name}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
           </article>
         </div>
         {/* Done */}
