@@ -216,7 +216,10 @@ export default function Home() {
                     {/* Toggle Status Button */}
                     <button
                       disabled={loading}
-                      onClick={() => toggleTodoStatus(todo.id, todo.isCompleted)}
+                      onClick={(e) => {
+                        e.stopPropagation(); // 이벤트 전파 중단
+                        toggleTodoStatus(todo.id, todo.isCompleted); // 상태 변경
+                      }}
                       className="focus:outline-none"
                     >
                       <Image
