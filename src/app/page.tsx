@@ -60,17 +60,6 @@ export default function Home() {
     }
   };
 
-  // 할 일 삭제
-  // const deleteTodo = async (id: number) => {
-  //   try {
-  //     await apiClient.delete(endpoints.item(id));
-  //     setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
-  //   } catch (error) {
-  //     console.error('할 일 삭제 실패:', error);
-  //   }
-  // };
-
-  // 컴포넌트가 처음 렌더링될 때 할 일 목록을 불러옴
   useEffect(() => {
     fetchTodos();
   }, []);
@@ -223,6 +212,7 @@ export default function Home() {
                   >
                     {/* Toggle Status Button */}
                     <button
+                      disabled={loading}
                       onClick={() => toggleTodoStatus(todo.id, todo.isCompleted)}
                       className="focus:outline-none"
                     >

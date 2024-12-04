@@ -23,7 +23,7 @@ const ItemDetailPage = () => {
         const numericItemId = parseInt(itemId, 10);
         const { data } = await apiClient.get<Todo>(endpoints.item(numericItemId));
         setItem(data);
-      } catch (err: any) {
+      } catch (err: unknown) {
         setError('항목을 불러오는 중 오류가 발생했습니다.');
         console.error('API 호출 실패:', err);
       } finally {
@@ -48,35 +48,32 @@ const ItemDetailPage = () => {
 
   const handleUpdate = async () => {
     if (!item) return;
-
+  
     const updatedItem = {
       name: item.name,
       memo: item.memo || '',
-      imageUrl: item.imageUrl || '',
+      imageUrl: selectedImage ? item.imageUrl || '' : '', // 조건부로 이미지 포함
       isCompleted: item.isCompleted,
     };
-
+  
     try {
-      console.log('수정 요청 데이터:', updatedItem);
       const { data } = await apiClient.patch(endpoints.item(item.id), updatedItem);
       alert('항목이 수정되었습니다.');
       setItem(data);
+      setSelectedImage(null); // 이미지 상태 초기화
       router.push('/');
-    } catch (err: any) {
+    } catch (err) {
       console.error('수정 실패:', err);
-      if (err.response) {
-        console.error('API 응답 오류:', err.response.data);
-        alert(`수정 실패: ${err.response.data.message}`);
-      } else {
-        alert('수정 요청 중 오류가 발생했습니다.');
-      }
+      alert('수정 요청 중 오류가 발생했습니다.');
     }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setSelectedImage(e.target.files[0]);
-      setItem({ ...item, imageUrl: URL.createObjectURL(e.target.files[0]) });
+      const file = e.target.files[0];
+      setSelectedImage(file); 
+  
+      setItem((prev) => (prev ? { ...prev, imageUrl: URL.createObjectURL(file) } : null));
     }
   };
 
@@ -115,10 +112,12 @@ const ItemDetailPage = () => {
           className="relative w-full xl:w-[311px] h-[311px] flex items-center justify-center border-2 border-dashed border-gray-300 rounded-md overflow-hidden"
         >
           {item.imageUrl ? (
-            <img
-              src={item.imageUrl}
+            <Image
+              src={item.imageUrl || '/svgs/ic-noImg.svg'}
               alt="첨부 이미지"
-              className="w-full h-full object-cover"
+              width={311}
+              height={311}
+              className="object-cover rounded-md"
             />
           ) : (
             <Image
